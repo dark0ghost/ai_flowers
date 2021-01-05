@@ -15,4 +15,4 @@ if __name__ == '__main__':
     # or 
     model.load_model().fit(epochs=50).evaluate(model.image_ds,model.image_label_ds)
 ```
-**project use python 3.8**
+**project use python 3.8  and tensorflow 2.4**
