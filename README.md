@@ -1,4 +1,6 @@
 # ai_flowers
+[![GitHub release](https://img.shields.io/github/release/dark0ghost/ai_flowers)](https://github.com/dark0ghost/ai_flowers/releases/)
+[![Github all releases](https://img.shields.io/github/downloads/dark0ghost/ai_flowers/total.svg)](https://github.com/dark0ghost/ai_flowers/releases/)
 ## about
 Model trained to identify certain types of flowers
 # use 
