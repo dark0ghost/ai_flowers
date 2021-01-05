@@ -3,73 +3,8 @@ from typing import Optional, List, Tuple
 import tensorflow as tf
 import pathlib
 
-from tensorflow.core.protobuf.config_pb2 import ConfigProto
-from tensorflow.python.client.session import InteractiveSession
 
-"""
-
-AUTOTUNE = tf.data.experimental.AUTOTUNE
-data_root = pathlib.Path("data/test/input")
-label_names = sorted(item.name for item in data_root.glob('*/') if item.is_dir())
-label_to_index = dict((name, index) for index, name in enumerate(label_names))
-all_image_paths = [str(path) for path in list(data_root.glob('*/*'))]
-all_image_labels = [label_to_index[pathlib.Path(path).parent.name]
-                    for path in all_image_paths]
-image_count = len(all_image_paths)
-
-
-def preprocess_image(image):
-    image = tf.image.decode_jpeg(image, channels=3)
-    image = tf.image.resize(image, [192, 192])
-    image /= 255.0
-
-    return image
-
-
-def load_and_preprocess_image(path):
-    image = tf.io.read_file(path)
-    return preprocess_image(image)
-
-
-path_ds = tf.data.Dataset.from_tensor_slices(all_image_paths)
-image_ds = path_ds.map(load_and_preprocess_image, num_parallel_calls=AUTOTUNE)
-label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_image_labels, tf.int64))
-image_label_ds = tf.data.Dataset.zip((image_ds, label_ds))
-BATCH_SIZE = 32
-
-# Установка размера буфера перемешивания, равного набору данных, гарантирует
-# полное перемешивание данных.
-ds = image_label_ds.shuffle(buffer_size=image_count)
-ds = ds.repeat()
-ds = ds.batch(BATCH_SIZE)
-# `prefetch` позволяет датасету извлекать пакеты в фоновом режиме, во время обучения модели.
-ds = ds.prefetch(buffer_size=AUTOTUNE)
-
-mobile_net = tf.keras.applications.MobileNetV2(input_shape=(192, 192, 3), include_top=False)
-mobile_net.trainable = False
-
-
-def change_range(image, label):
-    return 2 * image - 1, label
-
-
-keras_ds = ds.map(change_range)
-image_batch, label_batch = next(iter(keras_ds))
-
-model = tf.keras.Sequential([
-    mobile_net,
-    tf.keras.layers.GlobalAveragePooling2D(),
-    tf.keras.layers.Dense(len(label_names), activation='softmax')
-])
-
-model.compile(optimizer=tf.keras.optimizers.Adam(),
-              loss='sparse_categorical_crossentropy',
-              metrics=["accuracy"])
-model.fit(ds, epochs=500, steps_per_epoch=1800)
-"""
-
-
-class Model:
+class Flowers:
 
     def __init__(self, path: str = "data/test/input", model_ai: Optional[tf.keras.Sequential] = None,
                  input_shape_mobile_net_v2: Tuple = (192, 192, 3)):
@@ -176,6 +111,9 @@ class Model:
 
 
 if __name__ == '__main__':
+    from tensorflow.core.protobuf.config_pb2 import ConfigProto
+    from tensorflow.python.client.session import InteractiveSession
+
     config = ConfigProto()
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
