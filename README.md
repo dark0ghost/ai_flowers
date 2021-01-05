@@ -1,5 +1,6 @@
 # ai_flowers
-
+## about
+Model trained to identify certain types of flowers
 # use 
 ```python
 from tensorflow.core.protobuf.config_pb2 import ConfigProto
