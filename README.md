@@ -14,5 +14,10 @@ if __name__ == '__main__':
     model.compile().fit(epochs=50).save_model()
     # or 
     model.load_model().fit(epochs=50).evaluate(model.image_ds,model.image_label_ds)
+   # prediction 
+    print(model.get_prediction(path=["data/test/input/melon/images (10).jpeg", "data/test/input/melon/images (1).jpeg","data/test/input/roses/24781114_bc83aa811e_n.jpg"]))
+   """
+   ['melon', 'melon', 'roses']
+   """
 ```
 ** project use python 3.8 **
