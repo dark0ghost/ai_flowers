@@ -1,7 +1,9 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Any
 
 import tensorflow as tf
 import pathlib
+from tensorflow.core.protobuf.config_pb2 import ConfigProto
+from tensorflow.python.client.session import InteractiveSession
 
 
 class Flowers:
@@ -92,6 +94,23 @@ class Flowers:
     def summary(self):
         return self.model.summary()
 
+    def get_prediction(self, x: Any,
+                       batch_size: Any = None,
+                       verbose: int = 0,
+                       steps: Any = None,
+                       callbacks=None,
+                       max_queue_size: int = 10,
+                       workers: int = 1,
+                       use_multiprocessing: bool = False):
+        self.model.predict(x, batch_size,
+                           verbose,
+                           steps,
+                           callbacks,
+                           max_queue_size,
+                           workers,
+                           use_multiprocessing)
+        return self
+
     @staticmethod
     def change_range(image, label):
         return 2 * image - 1, label
@@ -107,15 +126,12 @@ class Flowers:
     @staticmethod
     def load_and_preprocess_image(path):
         image = tf.io.read_file(path)
-        return Model.preprocess_image(image)
+        return Flowers.preprocess_image(image)
 
 
 if __name__ == '__main__':
-    from tensorflow.core.protobuf.config_pb2 import ConfigProto
-    from tensorflow.python.client.session import InteractiveSession
-
     config = ConfigProto()
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
-    model = Model()
-    model.compile().fit(epochs=50).save_model()
+    model = Flowers()
+    model.compile().fit(epochs=50).evaluate(model.image_ds, model.image_label_ds).save_model()
